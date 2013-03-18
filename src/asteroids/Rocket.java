@@ -4,14 +4,17 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
+import java.awt.Toolkit;
 
 public class Rocket
 {
-    private double rocketHeading = 0;//in degrees
-    private double rocketXspeed = 5; 
+    private double rocketHeading = 0;//in radians
+    private double rocketXspeed = 0; 
     private double rocketYspeed = 0;
     double rocketXpos = 200;
     double rocketYpos = 200;
+    int width = Toolkit.getDefaultToolkit().getScreenSize().width;
+    int height = Toolkit.getDefaultToolkit().getScreenSize().height;
     int[] rocketXpoints =
     {
         0, 2, 2, 2, 2, 6, 2, 2, 1, 1, -1, -1, -2, -2, -6, -2, -2, -2, -2, 0
@@ -24,14 +27,18 @@ public class Rocket
 
     public void paintself(Graphics2D g2)
     {
+        g2.setColor(Color.WHITE);
+        g2.drawString((int)Math.toDegrees(rocketHeading) + "", 1000, 200);
         g2.translate(rocketXpos, rocketYpos);
         g2.scale(10, 10);
         g2.rotate(rocketHeading);
         g2.setColor(new Color(0, 128, 255));
         g2.fill(rocketOutline);
-        g2.setColor(Color.BLACK);
+        g2.setColor(Color.MAGENTA);
         g2.setStroke(new BasicStroke(.5f));
         g2.draw(rocketOutline);
+        g2.translate(-rocketXpos, -rocketYpos);
+        g2.scale(1, 1);
     }
 
     public double getRocketHeading()
@@ -47,9 +54,24 @@ public class Rocket
     public void moveSelf()
     {
         rocketXpos = rocketXpos + rocketXspeed;
-        if (rocketXpos > 2000)
+        if (rocketXpos > width)
         {
             rocketXpos = 0;
+        }
+        rocketYpos = rocketYpos + rocketYspeed;
+        if (rocketYpos > height)
+        {
+            rocketYpos = 0;
+        }
+        rocketXpos = rocketXpos + rocketXspeed;
+        if (rocketXpos < 0)
+        {
+            rocketXpos = width;
+        }
+        rocketYpos = rocketYpos + rocketYspeed;
+        if (rocketYpos < 0)
+        {
+            rocketYpos = height;
         }
     }        
 
