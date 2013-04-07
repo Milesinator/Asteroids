@@ -10,8 +10,9 @@ public class Rocket
 {
     private double rocketHeading = 0;//in radians
     private double rocketXspeed = 0; 
-    private double rocketYspeed = 0;
+    private double rocketYspeed = 3;
     double rocketXpos = 200;
+    private double rocketSpeed;
     double rocketYpos = 200;
     int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     int height = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -53,22 +54,22 @@ public class Rocket
 
     public void moveSelf()
     {
-        rocketXpos = rocketXpos + rocketXspeed;
+        rocketXspeed = getRocketSpeed() * Math.sin(rocketHeading); 
+        rocketXpos = rocketXspeed + rocketXpos;
         if (rocketXpos > width)
         {
             rocketXpos = 0;
         }
-        rocketYpos = rocketYpos + rocketYspeed;
+        rocketYspeed = getRocketSpeed() * -Math.cos(rocketHeading); 
+        rocketYpos = rocketYspeed + rocketYpos;
         if (rocketYpos > height)
         {
             rocketYpos = 0;
         }
-        rocketXpos = rocketXpos + rocketXspeed;
         if (rocketXpos < 0)
         {
             rocketXpos = width;
         }
-        rocketYpos = rocketYpos + rocketYspeed;
         if (rocketYpos < 0)
         {
             rocketYpos = height;
@@ -93,5 +94,21 @@ public class Rocket
     public void setRocketYspeed(double rocketYspeed)
     {
         this.rocketYspeed = rocketYspeed;
+    }
+
+    /**
+     * @param rocketSpeed the rocketSpeed to set
+     */
+    public void setRocketSpeed(double rocketSpeed)
+    {
+        this.rocketSpeed = rocketSpeed;
+    }
+
+    /**
+     * @return the rocketSpeed
+     */
+    public double getRocketSpeed()
+    {
+        return rocketSpeed;
     }
 }
