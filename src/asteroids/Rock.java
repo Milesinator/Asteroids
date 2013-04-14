@@ -34,6 +34,7 @@ public class Rock
     }
     public void paintself(Graphics2D g2)
     {
+        g2.setTransform(identity);
         g2.setColor(Color.WHITE);
         g2.translate(rockXpos, rockYpos);
         g2.scale(30, 30);
@@ -45,7 +46,7 @@ public class Rock
     public void moveSelf()
     {
         rockXpos = rockXpos + 1;
-        rockYpos = rockYpos + 1;
+//        rockYpos = rockYpos + 1;
     }
             
 }   
