@@ -1,4 +1,4 @@
-package asteroids;
+ package asteroids;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -8,32 +8,40 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
-public class Asteroids extends JComponent implements ActionListener, KeyListener
+public class Asteroids extends JComponent implements Runnable, ActionListener, KeyListener
 {
     JFrame space;
     Rock asteroid;
+    double rocketXpos;
+    double rocketYpos;
     int width = Toolkit.getDefaultToolkit().getScreenSize().width;
-    int height = Toolkit.getDefaultToolkit().getScreenSize().height;
+    int height = Toolkit.getDefaultToolkit().getScreenSize().height;                                                                                                                                              
     Rocket starCruiser;
     static Asteroids controller;
     Timer ticker;
+    Timer asteroidTicker;
+    ArrayList<Rock> rockStorage = new ArrayList<Rock>();
+    ArrayList<Bullet> bulletStorage = new ArrayList<Bullet>();
 
     public static void main(String[] args)
     {
         controller = new Asteroids();
-        controller.getGoing();
+        SwingUtilities.invokeLater(controller);
     }
 
-    public void getGoing()
+    public void run()
     {
         ticker = new Timer(20, this);
         ticker.start();
+        asteroidTicker = new Timer(1000, this);
+        asteroidTicker.start();
         starCruiser = new Rocket();
-        asteroid = new Rock();
         space = new JFrame("Asteroids");
         space.setBackground(Color.BLACK);
         space.setVisible(true);
@@ -48,7 +56,16 @@ public class Asteroids extends JComponent implements ActionListener, KeyListener
     {
         Graphics2D g2 = (Graphics2D) g;
         starCruiser.paintself(g2);
-        asteroid.paintself(g2);
+        for(Rock r : rockStorage)
+        {
+            r.paintself(g2);
+            r.moveSelf();
+        }
+        for(Bullet b : bulletStorage)
+        {
+            b.paintself(g2);
+            b.moveSelf();
+        }
     }
 
     @Override
@@ -56,8 +73,11 @@ public class Asteroids extends JComponent implements ActionListener, KeyListener
     {
         repaint();
         starCruiser.moveSelf();
+        if (ae.getSource() == asteroidTicker)
+        {
+            rockStorage.add(new Rock());
+        }
     }
-
     @Override
     public void keyTyped(KeyEvent ke)
     {
@@ -81,23 +101,27 @@ public class Asteroids extends JComponent implements ActionListener, KeyListener
             if (starCruiser.getRocketHeading() < 0)
             {
                 starCruiser.setRocketHeading(starCruiser.getRocketHeading() + Math.toRadians(360));
-
             }
         }
 
         if (ke.getKeyCode() == 40)//checking for down arrow
         {
-            starCruiser.setRocketXspeed(starCruiser.getRocketXspeed() - 1);
-//            starCruiser.setRocketYspeed(starCruiser.getRocketYspeed() - 1);
+            starCruiser.setRocketSpeed(starCruiser.getRocketSpeed() - 1);
         }
 
         if (ke.getKeyCode() == 38)//checking for up arrow
         {
-            starCruiser.setRocketXspeed(starCruiser.getRocketXspeed() + 1);
-//            starCruiser.setRocketYspeed(starCruiser.getRocketYspeed() + 1);
+            starCruiser.setRocketSpeed(starCruiser.getRocketSpeed() + 1);
+        }
+        
+        if (ke.getKeyCode() == 32)//checking for space bar, fires bullet
+        {
+            bulletStorage.add(new Bullet(500, 500));
+            System.out.println(bulletStorage.size());
         }
     }
-
+    
+    
     @Override
     public void keyReleased(KeyEvent ke)
     {

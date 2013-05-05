@@ -5,12 +5,15 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
 
 public class Rocket
 {
     private double rocketHeading = 0;//in radians
-    private double rocketXspeed = 0; 
+    private double rocketXspeed = 0;
     private double rocketYspeed = 3;
+    AffineTransform rocketAffineTransform;
+    private AffineTransform identity = new AffineTransform();
     double rocketXpos = 200;
     private double rocketSpeed;
     double rocketYpos = 200;
@@ -29,7 +32,7 @@ public class Rocket
     public void paintself(Graphics2D g2)
     {
         g2.setColor(Color.WHITE);
-        g2.drawString((int)Math.toDegrees(rocketHeading) + "", 1000, 200);
+        g2.drawString((int) Math.toDegrees(rocketHeading) + "", 1000, 200);
         g2.translate(rocketXpos, rocketYpos);
         g2.scale(10, 10);
         g2.rotate(rocketHeading);
@@ -38,8 +41,8 @@ public class Rocket
         g2.setColor(Color.MAGENTA);
         g2.setStroke(new BasicStroke(.5f));
         g2.draw(rocketOutline);
-        g2.translate(-rocketXpos, -rocketYpos);
-        g2.scale(1, 1);
+        rocketAffineTransform = g2.getTransform();
+        g2.setTransform(identity);
     }
 
     public double getRocketHeading()
@@ -54,17 +57,17 @@ public class Rocket
 
     public void moveSelf()
     {
-        rocketXspeed = getRocketSpeed() * Math.sin(rocketHeading); 
+        rocketXspeed = getRocketSpeed() * Math.sin(rocketHeading);
         rocketXpos = rocketXspeed + rocketXpos;
-        if (rocketXpos > width)
-        {
-            rocketXpos = 0;
-        }
-        rocketYspeed = getRocketSpeed() * -Math.cos(rocketHeading); 
+        rocketYspeed = getRocketSpeed() * -Math.cos(rocketHeading);
         rocketYpos = rocketYspeed + rocketYpos;
         if (rocketYpos > height)
         {
             rocketYpos = 0;
+        }
+        if (rocketXpos > width)
+        {
+            rocketXpos = 0;
         }
         if (rocketXpos < 0)
         {
@@ -74,7 +77,7 @@ public class Rocket
         {
             rocketYpos = height;
         }
-    }        
+    }
 
     public double getRocketXspeed()
     {
@@ -96,18 +99,12 @@ public class Rocket
         this.rocketYspeed = rocketYspeed;
     }
 
-    /**
-     * @param rocketSpeed the rocketSpeed to set
-     */
     public void setRocketSpeed(double rocketSpeed)
     {
         this.rocketSpeed = rocketSpeed;
     }
 
-    /**
-     * @return the rocketSpeed
-     */
-    public double getRocketSpeed()
+      public double getRocketSpeed()
     {
         return rocketSpeed;
     }
