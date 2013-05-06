@@ -29,7 +29,7 @@ public class Rocket
     };
     Polygon rocketOutline = new Polygon(rocketXpoints, rocketYpoints, rocketXpoints.length);
 
-    public void paintself(Graphics2D g2)
+    public AffineTransform paintself(Graphics2D g2)
     {
         g2.setColor(Color.WHITE);
         g2.drawString((int) Math.toDegrees(rocketHeading) + "", 1000, 200);
@@ -41,8 +41,9 @@ public class Rocket
         g2.setColor(Color.MAGENTA);
         g2.setStroke(new BasicStroke(.5f));
         g2.draw(rocketOutline);
+        g2.scale(.1, .1);
         rocketAffineTransform = g2.getTransform();
-        g2.setTransform(identity);
+        return rocketAffineTransform;
     }
 
     public double getRocketHeading()

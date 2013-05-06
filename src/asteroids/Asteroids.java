@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -20,6 +21,7 @@ public class Asteroids extends JComponent implements Runnable, ActionListener, K
     Rock asteroid;
     double rocketXpos;
     double rocketYpos;
+    AffineTransform rocketAffineTransform;
     int width = Toolkit.getDefaultToolkit().getScreenSize().width;
     int height = Toolkit.getDefaultToolkit().getScreenSize().height;                                                                                                                                              
     Rocket starCruiser;
@@ -35,6 +37,7 @@ public class Asteroids extends JComponent implements Runnable, ActionListener, K
         SwingUtilities.invokeLater(controller);
     }
 
+    @Override
     public void run()
     {
         ticker = new Timer(20, this);
@@ -55,7 +58,7 @@ public class Asteroids extends JComponent implements Runnable, ActionListener, K
     public void paint(Graphics g)
     {
         Graphics2D g2 = (Graphics2D) g;
-        starCruiser.paintself(g2);
+        rocketAffineTransform = starCruiser.paintself(g2);
         for(Rock r : rockStorage)
         {
             r.paintself(g2);
@@ -116,8 +119,7 @@ public class Asteroids extends JComponent implements Runnable, ActionListener, K
         
         if (ke.getKeyCode() == 32)//checking for space bar, fires bullet
         {
-            bulletStorage.add(new Bullet(500, 500));
-            System.out.println(bulletStorage.size());
+            bulletStorage.add(new Bullet(rocketAffineTransform));
         }
     }
     

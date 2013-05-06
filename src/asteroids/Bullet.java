@@ -12,18 +12,21 @@ public class Bullet
     double bulletYpos = 500;
     double bulletSpeed;
     double bulletCourse;
-    Rectangle2D.Double bulletShape = new Rectangle2D.Double(bulletXpos, bulletYpos, 4, 2);
+    AffineTransform bulletAffineTransform;
+    Rectangle2D.Double bulletShape = new Rectangle2D.Double(0, 0, 4, 2);
 
-    public Bullet(double rocketXpos, double rocketYpos)
+    public Bullet(AffineTransform rocketAffineTransform)
     {
-        
+        bulletAffineTransform = rocketAffineTransform;
     }
 
     public void paintself(Graphics2D g2)
     {
-        g2.setTransform(new AffineTransform());
+        g2.setTransform(bulletAffineTransform);
         g2.setColor(Color.WHITE);
         g2.fill(bulletShape);
+        System.out.println();
+        g2.setTransform(new AffineTransform());
     }
 
     public void moveSelf()
